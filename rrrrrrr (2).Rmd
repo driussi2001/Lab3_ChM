@@ -1,0 +1,58 @@
+---
+title: "Lab_3"
+author: "Kaplenko Oleksandr"
+date: "14 10 2020"
+output: html_document
+---
+
+```{r}
+df <- read.csv(file="goalkeepers.csv", nrows = 1500)
+library("plot3D")
+library(scatterplot3d)
+z <- df$MINS
+x <- df$SV
+y <- df$GP
+s3d <- scatterplot3d(x, y, z, highlight.3d=TRUE, col.axis="blue",
+col.grid="lightblue", main="Spiral",
+pch=1,angle=30)
+
+my.lm <- lm(df$MINS ~ df$SV + df$GP)
+s3d$plane3d(my.lm)
+
+library(rgl)
+plot3d(df$MINS, df$SV, df$GP)
+
+#s3d$points3d(df$SV, df$GP, df$MINS, type="l", col="green", lwd=1)
+
+
+```
+# прогноз залишки
+```{r}
+plot(my.lm$fitted.values,my.lm$residuals,
+xlab="prediction",ylab="residuals")
+abline(0,0,col="red")
+```
+
+# відгук залишки
+```{r}
+plot(df$MINS,my.lm$residuals,
+xlab="prediction",ylab="residuals")
+abline(0,0,col="red")
+```
+
+# прогноз відгук
+```{r}
+plot(my.lm$fitted.values,df$MINS,
+xlab="prediction",ylab="residuals")
+```
+
+# qq залишків
+```{r}
+qqnorm(my.lm$residuals)
+qqline(my.lm$residuals,col="red")
+```
+
+# аналіз
+```{r}
+summary(my.lm)
+```
